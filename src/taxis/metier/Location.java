@@ -1,6 +1,6 @@
 package taxis.metier;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.sql.*;
 import java.util.*;
 import myconnections.DBConnection;
@@ -8,7 +8,7 @@ import myconnections.DBConnection;
 public class Location {
 
     protected int idLoc;
-    protected LocalDate dateLoc;
+    protected Date dateLoc;
     protected int kmtotal;
     protected float accompte;
     protected float total;
@@ -35,7 +35,7 @@ public class Location {
      * @param idTaxi identifiant unique du taxi loué
      * @param idClient identifiant unique du client qui loue le taxi
      */
-    public Location(int idLoc, LocalDate dateLoc, int kmtotal, float accompte, float total, int idAdrDebut, int idAdrFin, int idTaxi, int idClient) {
+    public Location(int idLoc, Date dateLoc, int kmtotal, float accompte, float total, int idAdrDebut, int idAdrFin, int idTaxi, int idClient) {
         this.idLoc = idLoc;
         this.dateLoc = dateLoc;
         this.kmtotal = kmtotal;
@@ -55,11 +55,11 @@ public class Location {
         this.idLoc = idLoc;
     }
 
-    public LocalDate getDateLoc() {
+    public Date getDateLoc() {
         return dateLoc;
     }
 
-    public void setDateLoc(LocalDate dateLoc) {
+    public void setDateLoc(Date dateLoc) {
         this.dateLoc = dateLoc;
     }
 
@@ -117,6 +117,11 @@ public class Location {
 
     public void setIdClient(int idClient) {
         this.idClient = idClient;
+    }
+    
+    @Override
+    public String toString() {
+        return "";
     }
 
 }

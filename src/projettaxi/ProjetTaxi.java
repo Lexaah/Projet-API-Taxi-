@@ -6,15 +6,20 @@ import java.util.Scanner;
 import java.util.List;
 import taxis.DAO.TaxisDAO;
 import taxis.DAO.DAO;
+import taxis.DAO.LocationDAO;
+import taxis.metier.Location;
 import taxis.metier.Taxis;
+import taxis.metier.VueAdresses;
 
 public class ProjetTaxi {
 
     Scanner sc1 = new Scanner(System.in);
     Taxis taxiActuel = null;
     DAO<Taxis> taxisDAO = null;
+    Location locationActuel = null;
+    DAO<VueAdresses> locationDAO = null;
 
-    public void menu() {
+    public void menu() throws SQLException {
         Scanner sc = new Scanner(System.in);
         Connection dbConnect = DBConnection.getConnection();
         if (dbConnect == null) {
@@ -33,7 +38,8 @@ public class ProjetTaxi {
             System.out.println("3. Recherche partielle d'une description");
             System.out.println("4. Modifier les données d'un profil (taxi)");
             System.out.println("5. Supprimer un profil (taxi)");
-            System.out.println("6. Fin de programme");
+            System.out.println("6. Chercher une location");
+            System.out.println("7. Fin de programme");
             System.out.println("\nChoix: ");
             choix = sc.nextInt();
 
@@ -54,6 +60,9 @@ public class ProjetTaxi {
                     effacerTaxi();
                     break;
                 case 6:
+                    rechercheLocation();
+                    break;
+                case 7:
                     System.out.println("\n--- FIN ---");
                     break;
                 default:
@@ -99,7 +108,7 @@ public class ProjetTaxi {
             System.out.println(taxiActuel);
 
         } catch (SQLException e) {
-            System.out.println("ERREUR SQL: " + e.getMessage());
+            System.out.println("ERREUR SQL:" + e.getMessage());
         }
     }
 
@@ -162,7 +171,22 @@ public class ProjetTaxi {
 
     }
 
-    public static void main(String[] args) {
+    public void rechercheLocation() throws SQLException {
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            System.out.println("\n\t-Recherche d'une location-");
+            System.out.print("ID de la location recherché: ");
+            int IDLoc = sc.nextInt();
+            List<VueAdresses> loc = ((LocationDAO) locationDAO).rechLoc(IDLoc);
+            System.out.println(loc);
+
+        } catch (SQLException e) {
+            System.out.println("ERREUR SQL:" + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) throws SQLException {
         ProjetTaxi pt = new ProjetTaxi();
         pt.menu();
     }
