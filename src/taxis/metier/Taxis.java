@@ -1,5 +1,7 @@
 package taxis.metier;
 
+import java.util.Objects;
+
 public class Taxis {
 
     protected int idTaxi;
@@ -19,6 +21,7 @@ public class Taxis {
      * @param immatriculation immatriculation du taxi
      * @param carburant type de carburant du taxi
      * @param prixKm tarifs du taxi (prix au kilomètre)
+     * @param description description du taxi
      */
     public Taxis(int idTaxi, String immatriculation, String carburant, float prixKm, String description) {
         this.idTaxi = idTaxi;
@@ -66,6 +69,30 @@ public class Taxis {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Taxis other = (Taxis) obj;
+        if (!Objects.equals(this.description, other.description)) {
+            return false;
+        }
+        return true;
     }
 
     @Override

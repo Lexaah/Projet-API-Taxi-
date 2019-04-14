@@ -17,7 +17,8 @@ public class ProjetTaxi {
     Taxis taxiActuel = null;
     DAO<Taxis> taxisDAO = null;
     Location locationActuel = null;
-    DAO<VueAdresses> locationDAO = null;
+    DAO<Location> LocationDAO = null;
+    DAO<VueAdresses> vueAdressesDAO = null;
 
     public void menu() throws SQLException {
         Scanner sc = new Scanner(System.in);
@@ -29,6 +30,8 @@ public class ProjetTaxi {
 
         taxisDAO = new TaxisDAO();
         taxisDAO.setConnection(dbConnect);
+        vueAdressesDAO = new VueAdressesDAO();
+        vueAdressesDAO.setConnection(dbConnect);
 
         int choix;
         do {
