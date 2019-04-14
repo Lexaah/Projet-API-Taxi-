@@ -112,7 +112,7 @@ public class TaxisDAOTest {
         System.out.println("Recherche par description");
         String motrech = "TestDescription";
         Taxis obj1 = new Taxis(0, "TestImma", "TestDIESEL", 12, "TestDescription");
-        Taxis obj2 = new Taxis(0, "TestImma2", "TestCarburant2", 15, "TestDescription");
+        Taxis obj2 = new Taxis(0, "TestImma2", "TestDIESEL2", 15, "TestDescription");
         TaxisDAO instance = new TaxisDAO();
         instance.setConnection(dbConnect);
         obj1 = instance.create(obj1);
@@ -141,7 +141,7 @@ public class TaxisDAOTest {
 
         obj = instance.create(obj);
         obj.setImmatriculation("TestImma2");
-        obj.setCarburant("TestCarburant2");
+        obj.setCarburant("TestDIESEL2");
         obj.setPrixKm(15);
         obj.setDescription("TestDescri2");
 
@@ -153,7 +153,7 @@ public class TaxisDAOTest {
         assertEquals(expResult.getPrixKm(), result.getPrixKm(), 0);
         assertEquals(expResult.getDescription(), result.getDescription());
         // TODO review the generated test code and remove the default call to fail.
-        instance.update(obj);
+        instance.delete(obj);
     }
 
     /**
