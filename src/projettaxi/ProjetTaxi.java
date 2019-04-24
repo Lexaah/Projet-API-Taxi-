@@ -1,12 +1,18 @@
 package projettaxi;
 
 import java.sql.*;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import myconnections.DBConnection;
 import java.util.Scanner;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import taxis.DAO.TaxisDAO;
 import taxis.DAO.DAO;
 import taxis.DAO.LocationDAO;
+import taxis.DAO.VueAdressesDAO;
 import taxis.metier.Location;
 import taxis.metier.Taxis;
 import taxis.metier.VueAdresses;
@@ -41,8 +47,11 @@ public class ProjetTaxi {
             System.out.println("3. Recherche partielle d'une description");
             System.out.println("4. Modifier les données d'un profil (taxi)");
             System.out.println("5. Supprimer un profil (taxi)");
-            System.out.println("6. Chercher une location");
-            System.out.println("7. Fin de programme");
+            System.out.println("6. Créer une location");
+            System.out.println("7. Rechercher une location");
+            System.out.println("8. Modifier une location");
+            System.out.println("9. Supprimer une location");
+            System.out.println("10. Fin de programme");
             System.out.println("\nChoix: ");
             choix = sc.nextInt();
 
@@ -62,10 +71,29 @@ public class ProjetTaxi {
                 case 5:
                     effacerTaxi();
                     break;
-                case 6:
+                case 6: {
+                    try {
+                        creationLocation();
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ProjetTaxi.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                break;
+                case 7:
                     rechercheLocation();
                     break;
-                case 7:
+                case 8: {
+                    try {
+                        modifierLocation();
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ProjetTaxi.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                break;
+                case 9:
+                    effacerLocation();
+                    break;
+                case 10:
                     System.out.println("\n--- FIN ---");
                     break;
                 default:
@@ -73,7 +101,7 @@ public class ProjetTaxi {
                     break;
             }
             System.out.println("\n");
-        } while (choix != 6);
+        } while (choix != 10);
 
     }
 
@@ -174,6 +202,40 @@ public class ProjetTaxi {
 
     }
 
+    public void creationLocation() throws ParseException {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("\n\t-Nouvelle location-");
+        System.out.print("Date de la location: ");
+        String date = sc.nextLine();
+        SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy");
+        Date dateLoc = (Date) format.parse(date);
+        System.out.print("Km total: ");
+        int kmTotal = sc.nextInt();
+        System.out.print("Acompte: ");
+        float acompte = sc.nextFloat();
+        sc.skip("\n");
+        System.out.println("Prix total: ");
+        float total = sc.nextFloat();
+        sc.skip("\n");
+        System.out.println("ID de l'adresse de dépard: ");
+        int idAdrDebut = sc.nextInt();
+        System.out.println("ID de l'adresse d'arrivée: ");
+        int idAdrFin = sc.nextInt();
+        System.out.println("ID du taxi: ");
+        int idTaxi = sc.nextInt();
+        System.out.println("ID du client: ");
+        int id = sc.nextInt();
+        locationActuel = new Location(0, dateLoc, kmTotal, acompte, total, idAdrDebut, idAdrFin, idTaxi, id);
+        try {
+            locationActuel = LocationDAO.create(locationActuel);
+            System.out.println("Location : " + locationActuel);
+        } catch (SQLException e) {
+            System.out.println("ERREUR SQL: " + e.getMessage());
+        }
+
+    }
+
     public void rechercheLocation() throws SQLException {
         Scanner sc = new Scanner(System.in);
 
@@ -181,11 +243,63 @@ public class ProjetTaxi {
             System.out.println("\n\t-Recherche d'une location-");
             System.out.print("ID de la location recherché: ");
             int IDLoc = sc.nextInt();
-            List<VueAdresses> loc = ((LocationDAO) locationDAO).rechLoc(IDLoc);
+            List<VueAdresses> loc = ((LocationDAO) vueAdressesDAO).rechLoc(IDLoc);
             System.out.println(loc);
 
         } catch (SQLException e) {
-            System.out.println("ERREUR SQL:" + e.getMessage());
+            System.out.println("ERREUR SQL: " + e.getMessage());
+        }
+    }
+
+    public void modifierLocation() throws ParseException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n\t-Modification d'une location-");
+        System.out.println("ID de la location recherchée: ");
+        int idLoc = sc.nextInt();
+        sc.skip("\n");
+        System.out.println("Nouvelle date: ");
+        String date = sc.nextLine();
+        SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy");
+        Date dateLoc = (Date) format.parse(date);
+        System.out.println("Nouveau km total: ");
+        int kmTotal = sc.nextInt();
+        System.out.println("Nouvel acompte:");
+        float acompte = sc.nextFloat();
+        sc.skip("\n");
+        System.out.println("Nouveau prix total: ");
+        float total = sc.nextFloat();
+        sc.skip("\n");
+        System.out.println("Nouvelle id de l'adresse de dépard: ");
+        int idAdrDebut = sc.nextInt();
+        System.out.println("Nouvelle  id de l'adresse d'arrivée: ");
+        int idAdrFin = sc.nextInt();
+        System.out.println("ID du nouveau taxi: ");
+        int idTaxi = sc.nextInt();
+        System.out.println("Nouvelle ID du client: ");
+        int id = sc.nextInt();
+
+        locationActuel = new Location(0, dateLoc, kmTotal, acompte, total, idAdrDebut, idAdrFin, idTaxi, id);
+        try {
+            locationActuel = LocationDAO.create(locationActuel);
+            System.out.println("Location : " + locationActuel);
+        } catch (SQLException e) {
+            System.out.println("ERREUR SQL: " + e.getMessage());
+        }
+
+    }
+
+    public void effacerLocation() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("\n\t-Suppression d'une location-");
+        System.out.print("\nID de la location: ");
+        int idLoc = sc.nextInt();
+
+        locationActuel = new Location(idLoc, null, 0, 0, 0, 0, 0, 0, 0);
+        try {
+            LocationDAO.delete(locationActuel);
+        } catch (SQLException e) {
+            System.out.println("ERREUR SQL: " + e.getMessage());
         }
     }
 
