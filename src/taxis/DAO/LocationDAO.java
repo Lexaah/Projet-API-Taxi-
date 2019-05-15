@@ -1,13 +1,11 @@
 package taxis.DAO;
 
 import java.sql.*;
-import java.sql.Date;
 import java.util.*;
 import taxis.metier.Location;
-import taxis.metier.Taxis;
 import taxis.metier.VueAdresses;
 
-public class LocationDAO extends DAO<VueAdresses> {
+public class LocationDAO extends DAO<Location> {
 
     public List<VueAdresses> rechLoc(int idrech) throws SQLException {
         List<VueAdresses> locationliste = new ArrayList<>();
@@ -24,7 +22,7 @@ public class LocationDAO extends DAO<VueAdresses> {
                 while (rs.next()) {
                     found = true;
                     int idloc = rs.getInt("IDLOC");
-                    Date dateloc = rs.getDate("DATELOC");
+                    String dateloc = rs.getString("DATELOC");
                     int kmtotal = rs.getInt("KMTOTAL");
                     Float accompte = rs.getFloat("ACCOMPTE");
                     Float total = rs.getFloat("TOTAL");
@@ -52,22 +50,102 @@ public class LocationDAO extends DAO<VueAdresses> {
     }
 
     @Override
-    public VueAdresses read(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Location read(int id) throws SQLException {
+        String req = "SELECT * FROM location WHERE idloc = ?";
+
+        try (PreparedStatement pstm = dbConnect.prepareStatement(req)) {
+
+            pstm.setInt(1, idloc);
+            try (ResultSet rs = pstm.executeQuery()) {
+                if (rs.next()) {
+
+                    String dateloc = rs.getString("DATELOC");
+                    int kmtotal = rs.getInt("KMTOTAL");
+                    float acompte = rs.getFloat("ACOMPTE");
+                    float total = rs.getFloat("TOTAL");
+                    int idclient = rs.getInt("IDCLIENT");
+                    int idtaxi = rs.getInt("IDTAXI");
+                    int idadrdebut = rs.getInt("IDADRDEBUT");
+                    int idadrfin = rs.getInt("IDADRFIN");
+
+                    return new location(idloc, dateloc, kmtotal, acompte, total, idclient, idtaxi, idadrdebut, idadrfin);
+
+                } else {
+                    throw new SQLException("Cette ID n'existe pas.");
+                }
     }
 
     @Override
-    public VueAdresses create(VueAdresses obj) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Location create(Location obj) throws SQLException {
+            System.out.println("TEST CONNEXION CREATE" + dbConnect);
+        String query1 = "INSERT INTO location(dateloc,kmtotal,acompte,total,idadrdebut,idadrfin,idtaxi,idclient)" + "VALUES(?,?,?,?,?,?,?,?)";
+        String query2 = "select idloc from location where idadrdebut =? and idadrfin = ? and idtaxi = ? and idclient = ?;";
+        try (PreparedStatement pstm1 = dbConnect.prepareStatement(query1);
+                PreparedStatement pstm2 = dbConnect.prepareStatement(query2)) {
+
+            pstm1.setString(1, obj.getDateLoc());
+            pstm1.setInt(2, obj.getKmtotal());
+            pstm1.setFloat(3, obj.getAccompte());
+            pstm1.setFloat(4, obj.getTotal());
+            pstm1.setInt(5, obj.getIdAdrDebut());
+            pstm1.setInt(6, obj.getIdAdrFin());
+            pstm1.setInt(7, obj.getIdTaxi());
+            pstm1.setInt(8, obj.getIdClient());
+            int nl = pstm1.executeUpdate();
+            System.out.println(nl + " ligne(s) insérée.");
+            pstm2.setInt(5, obj.getIdAdrDebut());
+            pstm2.setInt(6, obj.getIdAdrFin());
+            pstm2.setInt(7, obj.getIdTaxi());
+            pstm2.setInt(8, obj.getIdClient());
+
+            try (ResultSet rs = pstm2.executeQuery()) {
+                if (rs.next()) {
+                    int idloc = rs.getInt(1);
+                    obj.setIdLoc(idloc);
+                    return read(idloc);
+                } else {
+                    throw new SQLException("Erreur: record introuvable");
+                }
+            }
+        }
     }
 
     @Override
-    public VueAdresses update(VueAdresses obj) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Location update(Location obj) throws SQLException {
+        String query = "update location set dateloc = ?, kmtotal = ?, acompte = ?, total = ?, idadrdebut = ?, idadrfin = ?, idtaxi = ?, idclient = ? where idloc = ?";
+        try (PreparedStatement pstm = dbConnect.prepareStatement(query)) {
+
+            pstm.setInt(9, obj.getIdLoc());
+            pstm.setString(1, obj.getDateLoc());
+            pstm.setInt(2, obj.getKmtotal());
+            pstm.setFloat(3, obj.getAccompte());
+            pstm.setFloat(4, obj.getTotal());
+            pstm.setInt(5, obj.getIdAdrDebut());
+            pstm.setInt(6, obj.getIdAdrFin());
+            pstm.setInt(7, obj.getIdTaxi());
+            pstm.setInt(8, obj.getIdClient());
+            int n = pstm.executeUpdate();
+            if (n == 0) {
+                throw new SQLException("Aucune ligne mise à jour");
+            } else {
+                System.out.println("Location n° " + obj.getIdLoc() + " modifiée.");
+            }
+            return read(obj.getIdLoc());
+        }
     }
 
     @Override
-    public void delete(VueAdresses obj) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void delete(Location obj) throws SQLException {
+        String query1 = "DELETE FROM location WHERE idloc = ?";
+        try (PreparedStatement pstm = dbConnect.prepareStatement(query1)) {
+            pstm.setInt(1, obj.getIdLoc());
+            int n = pstm.executeUpdate();
+            if (n == 0) {
+                throw new SQLException("Aucune ligne effacée.");
+            } else {
+                System.out.println("Location N°" + obj.getIdLoc() + " supprimée.");
+            }
+
+        }
     }
 }

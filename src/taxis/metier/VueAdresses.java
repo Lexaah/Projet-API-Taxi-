@@ -5,7 +5,7 @@ import java.sql.Date;
 public class VueAdresses {
 
     protected int idLoc;
-    protected Date dateLoc;
+    protected String dateLoc;
     protected int kmtotal;
     protected float accompte;
     protected float total;
@@ -44,7 +44,7 @@ public class VueAdresses {
      * @param rueArrivee nom de la rue du lieu d'arrivée
      * @param numArrivee emplacement dans la rue du lieu d'arrivée
      */
-    public VueAdresses(int idLoc, Date dateLoc, int kmtotal, float accompte, float total, int idTaxi, int idClient, int cpDepart, String localiteDepart,
+    public VueAdresses(int idLoc, String dateLoc, int kmtotal, float accompte, float total, int idTaxi, int idClient, int cpDepart, String localiteDepart,
             String rueDepart, String numDepart, int cpArrivee, String localiteArrivee, String rueArrivee, String numArrivee) {
         this.idLoc = idLoc;
         this.dateLoc = dateLoc;
@@ -71,11 +71,11 @@ public class VueAdresses {
         this.idLoc = idLoc;
     }
 
-    public Date getDateLoc() {
+    public String getDateLoc() {
         return dateLoc;
     }
 
-    public void setDateLoc(Date dateLoc) {
+    public void setDateLoc(String dateLoc) {
         this.dateLoc = dateLoc;
     }
 

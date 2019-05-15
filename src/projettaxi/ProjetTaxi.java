@@ -1,9 +1,7 @@
 package projettaxi;
 
 import java.sql.*;
-import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import myconnections.DBConnection;
 import java.util.Scanner;
 import java.util.List;
@@ -23,7 +21,7 @@ public class ProjetTaxi {
     Taxis taxiActuel = null;
     DAO<Taxis> taxisDAO = null;
     Location locationActuel = null;
-    DAO<Location> LocationDAO = null;
+    DAO<Location> locationDAO = null;
     DAO<VueAdresses> vueAdressesDAO = null;
 
     public void menu() throws SQLException {
@@ -38,6 +36,8 @@ public class ProjetTaxi {
         taxisDAO.setConnection(dbConnect);
         vueAdressesDAO = new VueAdressesDAO();
         vueAdressesDAO.setConnection(dbConnect);
+        locationDAO = new LocationDAO(); //Exception in thread "main" java.lang.ExceptionInInitializerError
+        locationDAO.setConnection(dbConnect);
 
         int choix;
         do {
@@ -207,9 +207,7 @@ public class ProjetTaxi {
 
         System.out.println("\n\t-Nouvelle location-");
         System.out.print("Date de la location: ");
-        String date = sc.nextLine();
-        SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy");
-        Date dateLoc = (Date) format.parse(date);
+        String dateLoc = sc.nextLine();
         System.out.print("Km total: ");
         int kmTotal = sc.nextInt();
         System.out.print("Acompte: ");
@@ -228,7 +226,7 @@ public class ProjetTaxi {
         int id = sc.nextInt();
         locationActuel = new Location(0, dateLoc, kmTotal, acompte, total, idAdrDebut, idAdrFin, idTaxi, id);
         try {
-            locationActuel = LocationDAO.create(locationActuel);
+            locationActuel = locationDAO.create(locationActuel);
             System.out.println("Location : " + locationActuel);
         } catch (SQLException e) {
             System.out.println("ERREUR SQL: " + e.getMessage());
@@ -243,7 +241,7 @@ public class ProjetTaxi {
             System.out.println("\n\t-Recherche d'une location-");
             System.out.print("ID de la location recherché: ");
             int IDLoc = sc.nextInt();
-            List<VueAdresses> loc = ((LocationDAO) vueAdressesDAO).rechLoc(IDLoc);
+            List<VueAdresses> loc = ((VueAdressesDAO) vueAdressesDAO).rechLoc(IDLoc);
             System.out.println(loc);
 
         } catch (SQLException e) {
@@ -258,9 +256,7 @@ public class ProjetTaxi {
         int idLoc = sc.nextInt();
         sc.skip("\n");
         System.out.println("Nouvelle date: ");
-        String date = sc.nextLine();
-        SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy");
-        Date dateLoc = (Date) format.parse(date);
+        String dateLoc = sc.nextLine();
         System.out.println("Nouveau km total: ");
         int kmTotal = sc.nextInt();
         System.out.println("Nouvel acompte:");
@@ -280,7 +276,7 @@ public class ProjetTaxi {
 
         locationActuel = new Location(0, dateLoc, kmTotal, acompte, total, idAdrDebut, idAdrFin, idTaxi, id);
         try {
-            locationActuel = LocationDAO.create(locationActuel);
+            locationActuel = locationDAO.update(locationActuel);
             System.out.println("Location : " + locationActuel);
         } catch (SQLException e) {
             System.out.println("ERREUR SQL: " + e.getMessage());
@@ -297,7 +293,7 @@ public class ProjetTaxi {
 
         locationActuel = new Location(idLoc, null, 0, 0, 0, 0, 0, 0, 0);
         try {
-            LocationDAO.delete(locationActuel);
+            locationDAO.delete(locationActuel);
         } catch (SQLException e) {
             System.out.println("ERREUR SQL: " + e.getMessage());
         }

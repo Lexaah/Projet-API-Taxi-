@@ -8,7 +8,7 @@ import myconnections.DBConnection;
 public class Location {
 
     protected int idLoc;
-    protected Date dateLoc;
+    protected String dateLoc;
     protected int kmtotal;
     protected float accompte;
     protected float total;
@@ -35,7 +35,7 @@ public class Location {
      * @param idTaxi identifiant unique du taxi loué
      * @param idClient identifiant unique du client qui loue le taxi
      */
-    public Location(int idLoc, Date dateLoc, int kmtotal, float accompte, float total, int idAdrDebut, int idAdrFin, int idTaxi, int idClient) {
+    public Location(int idLoc, String dateLoc, int kmtotal, float accompte, float total, int idAdrDebut, int idAdrFin, int idTaxi, int idClient) {
         this.idLoc = idLoc;
         this.dateLoc = dateLoc;
         this.kmtotal = kmtotal;
@@ -55,11 +55,11 @@ public class Location {
         this.idLoc = idLoc;
     }
 
-    public Date getDateLoc() {
+    public String getDateLoc() {
         return dateLoc;
     }
 
-    public void setDateLoc(Date dateLoc) {
+    public void setDateLoc(String dateLoc) {
         this.dateLoc = dateLoc;
     }
 

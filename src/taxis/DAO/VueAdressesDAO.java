@@ -40,7 +40,7 @@ public class VueAdressesDAO extends DAO<VueAdresses> {
                 while (rs.next()) {
                     trouve = true;
                     int idloc = rs.getInt("IDLOC");
-                    Date dateloc = rs.getDate("DATELOC");
+                    String dateloc = rs.getString("DATELOC");
                     int kmtotal = rs.getInt("KMTOTAL");
                     float acompte = rs.getFloat("ACOMPTE");
                     float total = rs.getFloat("TOTAL");
