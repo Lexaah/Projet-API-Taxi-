@@ -50,12 +50,12 @@ public class LocationDAO extends DAO<Location> {
     }
 
     @Override
-    public Location read(int id) throws SQLException {
+    public Location read(int idLoc) throws SQLException {
         String req = "SELECT * FROM location WHERE idloc = ?";
 
         try (PreparedStatement pstm = dbConnect.prepareStatement(req)) {
 
-            pstm.setInt(1, idloc);
+            pstm.setInt(1, idLoc);
             try (ResultSet rs = pstm.executeQuery()) {
                 if (rs.next()) {
 
@@ -68,18 +68,19 @@ public class LocationDAO extends DAO<Location> {
                     int idadrdebut = rs.getInt("IDADRDEBUT");
                     int idadrfin = rs.getInt("IDADRFIN");
 
-                    return new location(idloc, dateloc, kmtotal, acompte, total, idclient, idtaxi, idadrdebut, idadrfin);
+                    return new Location(idLoc, dateloc, kmtotal, acompte, total, idclient, idtaxi, idadrdebut, idadrfin);
 
                 } else {
                     throw new SQLException("Cette ID n'existe pas.");
                 }
+            }
+        }
     }
 
     @Override
     public Location create(Location obj) throws SQLException {
-            System.out.println("TEST CONNEXION CREATE" + dbConnect);
         String query1 = "INSERT INTO location(dateloc,kmtotal,acompte,total,idadrdebut,idadrfin,idtaxi,idclient)" + "VALUES(?,?,?,?,?,?,?,?)";
-        String query2 = "select idloc from location where idadrdebut =? and idadrfin = ? and idtaxi = ? and idclient = ?;";
+        String query2 = "SELECT idloc FROM location WHERE idadrdebut =? AND idadrfin = ? AND idtaxi = ? AND idclient = ?;";
         try (PreparedStatement pstm1 = dbConnect.prepareStatement(query1);
                 PreparedStatement pstm2 = dbConnect.prepareStatement(query2)) {
 
@@ -93,10 +94,10 @@ public class LocationDAO extends DAO<Location> {
             pstm1.setInt(8, obj.getIdClient());
             int nl = pstm1.executeUpdate();
             System.out.println(nl + " ligne(s) insérée.");
-            pstm2.setInt(5, obj.getIdAdrDebut());
-            pstm2.setInt(6, obj.getIdAdrFin());
-            pstm2.setInt(7, obj.getIdTaxi());
-            pstm2.setInt(8, obj.getIdClient());
+            pstm2.setInt(1, obj.getIdAdrDebut());
+            pstm2.setInt(2, obj.getIdAdrFin());
+            pstm2.setInt(3, obj.getIdTaxi());
+            pstm2.setInt(4, obj.getIdClient());
 
             try (ResultSet rs = pstm2.executeQuery()) {
                 if (rs.next()) {
@@ -112,7 +113,7 @@ public class LocationDAO extends DAO<Location> {
 
     @Override
     public Location update(Location obj) throws SQLException {
-        String query = "update location set dateloc = ?, kmtotal = ?, acompte = ?, total = ?, idadrdebut = ?, idadrfin = ?, idtaxi = ?, idclient = ? where idloc = ?";
+        String query = "UPDATE location SET dateloc = ?, kmtotal = ?, acompte = ?, total = ?, idadrdebut = ?, idadrfin = ?, idtaxi = ?, idclient = ? WHERE idloc = ?";
         try (PreparedStatement pstm = dbConnect.prepareStatement(query)) {
 
             pstm.setInt(9, obj.getIdLoc());

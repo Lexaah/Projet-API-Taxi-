@@ -242,7 +242,7 @@ public class ProjetTaxi {
             System.out.print("ID de la location recherché: ");
             int IDLoc = sc.nextInt();
             List<VueAdresses> loc = ((VueAdressesDAO) vueAdressesDAO).rechLoc(IDLoc);
-            System.out.println(loc);
+            System.out.println("Locaion: " + loc);
 
         } catch (SQLException e) {
             System.out.println("ERREUR SQL: " + e.getMessage());
@@ -274,10 +274,9 @@ public class ProjetTaxi {
         System.out.println("Nouvelle ID du client: ");
         int id = sc.nextInt();
 
-        locationActuel = new Location(0, dateLoc, kmTotal, acompte, total, idAdrDebut, idAdrFin, idTaxi, id);
+        locationActuel = new Location(idLoc, dateLoc, kmTotal, acompte, total, idAdrDebut, idAdrFin, idTaxi, id);
         try {
             locationActuel = locationDAO.update(locationActuel);
-            System.out.println("Location : " + locationActuel);
         } catch (SQLException e) {
             System.out.println("ERREUR SQL: " + e.getMessage());
         }

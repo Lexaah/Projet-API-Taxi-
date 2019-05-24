@@ -1,20 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package taxis.DAO;
 
-import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import myconnections.DBConnection;
 import taxis.metier.VueAdresses;
-import taxis.metier.Taxis;
 
 public class VueAdressesDAO extends DAO<VueAdresses> {
     
@@ -28,7 +19,7 @@ public class VueAdressesDAO extends DAO<VueAdresses> {
 
     public List<VueAdresses> rechLoc(int idrech) throws SQLException {
 
-        String req = "SELECT * FROM vue_location where idloc = ?";
+        String req = "SELECT * FROM vue_adresses WHERE idloc = ?";
 
         try (PreparedStatement pstm = dbConnect.prepareStatement(req)) {
 
@@ -50,10 +41,10 @@ public class VueAdressesDAO extends DAO<VueAdresses> {
                     String localite = rs.getString("LOCALITE");
                     String rue = rs.getString("RUE");
                     String num = rs.getString("NUM");
-                    int cpRetour = rs.getInt("CP du retour");
-                    String localiteRetour = rs.getString("LOC du retour");
-                    String rueRetour = rs.getString("RUE du retour");
-                    String numRetour = rs.getString("NUM du retour");
+                    int cpRetour = rs.getInt("CP arrivée");
+                    String localiteRetour = rs.getString("LOC arrivée");
+                    String rueRetour = rs.getString("RUE arrivée");
+                    String numRetour = rs.getString("NUM arrivée");
 
                     loc.add(new VueAdresses(idloc, dateloc, kmtotal, acompte, total, idclient, idtaxi, cp, localite, rue, num, cpRetour, localiteRetour, rueRetour, numRetour));
                     }
